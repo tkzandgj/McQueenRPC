@@ -49,7 +49,15 @@ public abstract class AbstractClientInvocationHandler implements InvocationHandl
 	public void updateServers(List<InetSocketAddress> servers){
 		this.servers = Collections.unmodifiableList(servers);
 	}
-	
+
+	/**
+	 * jdk动态代理
+	 * @param proxy
+	 * @param method
+	 * @param args
+	 * @return
+	 * @throws Throwable
+	 */
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		InetSocketAddress server = null;
 		if(servers.size() == 1){
@@ -70,6 +78,7 @@ public abstract class AbstractClientInvocationHandler implements InvocationHandl
 		else{
 			timeout = methodTimeouts.get("*");
 		}
+		//通过动态代理+反射 去调用服务端的方法
 		return client.invokeSync(targetInstanceName, methodName, argTypes, args, timeout, codecType, protocolType);
 	}
 	
